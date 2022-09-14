@@ -2,7 +2,7 @@ require 'rspec'
 require './lib/book'
 require './lib/author'
 
-RSpec.describe Book do
+RSpec.describe Author do
   describe '#initialize' do
     it "exists" do
       charlotte_bronte = Author.new({first_name: "Charlotte", last_name: "Bronte"})
