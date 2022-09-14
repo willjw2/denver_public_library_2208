@@ -39,4 +39,57 @@ RSpec.describe Library do
       expect(@dpl.publication_time_frame_for(@harper_lee)).to eq({:start=>"1960", :end=>"1960"})
     end
   end
+  describe '#checkout' do
+    it "can checkout a book" do
+      @dpl.add_author(@charlotte_bronte)
+      @dpl.add_author(@harper_lee)
+      expect(@dpl.checkout(@jane_eyre)).to eq(true)
+    end
+    it "can tell if a book doesn't exist in library" do
+      expect(@dpl.checkout(@mockingbird)).to eq(false)
+      expect(@dpl.checkout(@jane_eyre)).to eq(false)
+    end
+    it "can't checkout a currently checked out book" do
+      @dpl.add_author(@charlotte_bronte)
+      @dpl.add_author(@harper_lee)
+      @dpl.checkout(@jane_eyre)
+      expect(@dpl.checkout(@jane_eyre)).to eq(false)
+    end
+  end
+  describe '#checked_out_books' do
+    it "can return array of checked out books" do
+      @dpl.add_author(@charlotte_bronte)
+      @dpl.add_author(@harper_lee)
+      @dpl.checkout(@jane_eyre)
+      @dpl.checkout(@villette)
+      expect(@dpl.checked_out_books).to eq([@jane_eyre, @villette])
+    end
+  end
+  describe '#return' do
+    it "can return books" do
+      @dpl.add_author(@charlotte_bronte)
+      @dpl.add_author(@harper_lee)
+      @dpl.checkout(@jane_eyre)
+      expect(@dpl.checked_out_books).to eq([@jane_eyre])
+      @dpl.return(@jane_eyre)
+      expect(@dpl.checked_out_books).to eq([])
+    end
+  end
+  describe '#most_popular_book' do
+    it "can return the most popular book" do
+      @dpl.add_author(@charlotte_bronte)
+      @dpl.add_author(@harper_lee)
+      @dpl.checkout(@jane_eyre)
+      @dpl.return(@jane_eyre)
+      @dpl.checkout(@jane_eyre)
+      @dpl.return(@jane_eyre)
+      @dpl.checkout(@villette)
+      @dpl.checkout(@mockingbird)
+      @dpl.return(@mockingbird)
+      @dpl.checkout(@mockingbird)
+      @dpl.return(@mockingbird)
+      @dpl.checkout(@mockingbird)
+      expect(@dpl.most_popular_book).to eq(@mockingbird)
+    end
+  end
 end
